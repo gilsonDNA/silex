@@ -2,36 +2,96 @@
 
 require_once __DIR__.'/../bootstrap.php';
 use \Code\Sistema\Service\ClienteService;
-use \Code\Sistema\Entity\Cliente;
-use \Code\Sistema\Mapper\ClienteMapper;
-use \Code\Sistema\Service\ProdutoService;
-use \Code\Sistema\Entity\Produto;
-use \Code\Sistema\Mapper\ProdutoMapper;
 
-$app->get('/', function() {
 
-    return "Olá Mundo";
-});
+
+use Symfony\Component\HttpFoundation\Request;
+
 
 
 //Registrando Serviço
-$app['clienteService'] = function(){
-    $clienteEntity = new Cliente();
-    $clientMapper = new ClienteMapper();
-
-    $clienteService = new ClienteService($clienteEntity, $clientMapper);
+$app['clienteService'] = function() use ($em){
+    $clienteService = new ClienteService($em);
     return $clienteService;
 };
 
-//Registrando Serviço Produto
-$app['produtoService'] = function(){
-    $produtoEntity = new Produto();
-    $produtoMapper = new ProdutoMapper();
 
-    $produtoService = new ProdutoService($produtoEntity, $produtoMapper);
-    return $produtoService;
-};
 
+##Trabalhando com API REST
+
+$app->get('/api/clientes', function() use ($app) {
+
+    $dados = $app['clienteService']->fetchAll();
+    return $app->json($dados);
+} );
+
+$app->get('/api/clientes/{id}', function($id) use ($app) {
+
+    $dados = $app['clienteService']->find($id);
+    return $app->json($dados);
+} );
+
+/**
+ * Método PUT
+ */
+$app->put('/api/clientes/{id}', function($id, Request $request) use ($app) {
+
+    $data['nome'] = $request->request->get('nome');
+    $data['email'] = $request->request->get('email');
+
+    var_dump($data['nome']);
+    var_dump($data['email']);
+
+    $dados = $app['clienteService']->update($id, $data);
+    return $app->json($dados);
+} );
+
+/**
+ * Método POST
+ */
+$app->post('/api/clientes', function(Request $request) use ($app) {
+
+    $dados['nome'] = $request->get('nome');
+    $dados['email'] = $request->get('email');
+
+    $result = $app['clienteService']->insert($dados);
+    return $app->json($result);
+} );
+
+/**
+ * Método DELETE
+ */
+$app->delete('/api/clientes/{id}', function($id) use ($app) {
+
+    $dados = $app['clienteService']->delete($id);
+    return $app->json($dados);
+} );
+
+
+
+
+
+##Exemplos com twig
+
+//trabalhando com twig
+$app->get("/", function() use ($app){
+ return $app['twig']->render('index.twig', []);
+})->bind("index");
+
+//Passando parâmetro
+$app->get('/ola/{nome}', function($nome) use ($app) {
+    return $app['twig']->render('ola.twig', ['nome'=>$nome]);
+});
+
+$app->get('/clientes', function() use ($app){
+    $dados = $app['clienteService']->fetchAll();
+
+    return $app['twig']->render('clientes.twig', ['clientes'=>$dados ] );
+})->bind("clientes");
+
+
+
+/*
 //Exemplo com Json_encode
 $app->get('/clientes', function(){
 
@@ -50,10 +110,14 @@ $app->get('/clientes', function(){
     return $strJson;
 });
 
+    */
+
+/*
 //Passando parâmetro
 $app->get('/ola/{nome}', function($nome){
     return "Olá {$nome}";
 });
+*/
 
 //Rota Cliente, que utiliza o Serviço
 $app->get("/cliente" , function() use ($app){

@@ -17,15 +17,16 @@ default Collation: utf8 - utf8_general_ci
 SQL para criação do banco
 -------------------------
 
-CREATE SCHEMA `phpbanco` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+CREATE SCHEMA `trilhando_doctrine` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
 
 
-Executar Fixture
+Executar Doctrine
 ----------------
 
 Para executar a Fixture execute o seguinte comando
 
-php src/Code/Sistema/db/fixture.php
+php doctrine orm:schema-tool:create
+
 
 
 

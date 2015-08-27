@@ -8,31 +8,63 @@
 
 namespace Code\Sistema\Service;
 
-use Code\Sistema\Entity\Cliente;
-use Code\Sistema\Mapper\ClienteMapper;
+use Code\Sistema\Entity\Cliente as ClienteEntity;
+use Doctrine\ORM\EntityManager;
 
 class ClienteService
 {
 
-    private $cliente;
-    private $clienteMapper;
 
-    public function __construct(Cliente $cliente, ClienteMapper $clienteMapper)
+    private $em;
+
+    public function __construct(EntityManager $em)
     {
-        $this->cliente = $cliente;
-        $this->clienteMapper = $clienteMapper;
+        $this->em = $em;
     }
 
     public function insert(array $data)
     {
 
-        $clienteEntity = new Cliente();
+        $clienteEntity = new ClienteEntity();
         $clienteEntity->setNome($data['nome']);
         $clienteEntity->setEmail($data['email']);
 
-        $mapper = new ClienteMapper();
-        $result = $mapper->insert($clienteEntity);
+        $this->em->persist($clienteEntity);
+        $this->em->flush();
 
-        return $result;
+
+        return $clienteEntity;
+    }
+
+    public function update($id, array $array)
+    {
+        $clienteEntity = $this->em->getReference('Code\Sistema\Entity\Cliente', $id);
+
+        $clienteEntity->setNome($array['nome']);
+        $clienteEntity->setEmail($array['email']);
+
+        $this->em->persist($clienteEntity);
+        $this->em->flush();
+
+
+       return $clienteEntity;
+    }
+
+    public function delete($id)
+    {
+        $cliente = $this->em->getPartialReference('Code\Sistema\Entity\Cliente', array('id' => $id));
+
+        var_dump($id);
+        $this->em->remove($cliente);
+        $this->em->flush();
+
+    }
+
+    public function fetchAll(){
+
+    }
+
+    public function find($id){
+        return $this->em->find($id);
     }
 } 

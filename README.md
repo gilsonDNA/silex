@@ -9,11 +9,6 @@ Aplicativo desenvolvido para exercitar os conceitos apresentados no curso de PHP
 
 É necessário criar o banco de dados:
 
-Nome Banco: **phpbanco**
-
-default Collation: utf8 - utf8_general_ci
-
-
 SQL para criação do banco
 -------------------------
 

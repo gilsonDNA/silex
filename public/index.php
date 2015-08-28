@@ -2,15 +2,13 @@
 
 require_once __DIR__.'/../bootstrap.php';
 use \Code\Sistema\Service\ClienteService;
-
-
-
 use Symfony\Component\HttpFoundation\Request;
 
 
 
 //Registrando Serviço
-$app['clienteService'] = function() use ($em){
+$app['clienteService'] = function() use ($em)
+{
     $clienteService = new ClienteService($em);
     return $clienteService;
 };
@@ -19,12 +17,18 @@ $app['clienteService'] = function() use ($em){
 
 ##Trabalhando com API REST
 
+/**
+ * Método GET
+ */
 $app->get('/api/clientes', function() use ($app) {
 
     $dados = $app['clienteService']->fetchAll();
     return $app->json($dados);
 } );
 
+/**
+ * Método GET
+ */
 $app->get('/api/clientes/{id}', function($id) use ($app) {
 
     $dados = $app['clienteService']->find($id);
@@ -83,13 +87,15 @@ $app->get('/ola/{nome}', function($nome) use ($app) {
     return $app['twig']->render('ola.twig', ['nome'=>$nome]);
 });
 
+
+/*
 $app->get('/clientes', function() use ($app){
     $dados = $app['clienteService']->fetchAll();
 
     return $app['twig']->render('clientes.twig', ['clientes'=>$dados ] );
 })->bind("clientes");
 
-
+*/
 
 /*
 //Exemplo com Json_encode

@@ -61,10 +61,15 @@ class ClienteService
     }
 
     public function fetchAll(){
+        $repository = $this->em->getRepository('Code\Sistema\Entity\Cliente');
+        $result = $repository->findAll();
+        return  $result;
 
     }
 
     public function find($id){
-        return $this->em->find($id);
+        $repository = $this->em->getRepository('Code\Sistema\Entity\Cliente');
+        $result = $repository->find($id);
+        return   $result;
     }
 } 

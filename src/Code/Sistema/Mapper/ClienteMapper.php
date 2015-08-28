@@ -71,16 +71,5 @@ class ClienteMapper
 
     }
 
-    public function find($entity){
 
-        return $this->em->find($entity);
-    }
-
-    public function fetchAll()
-    {
-        $dado = $this->dados;
-
-        return $dado;
-
-    }
 } 

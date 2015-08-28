@@ -25,7 +25,9 @@ Executar Doctrine
 
 Para executar a Fixture execute o seguinte comando
 
+
 php doctrine orm:schema-tool:create
+
 
 
 
